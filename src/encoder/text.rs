@@ -69,7 +69,10 @@ impl TextEncoder {
 
             // Write `# TYPE` header.
             let metric_type = mf.get_field_type();
-            let lowercase_type = format!("{:?}", metric_type).to_lowercase();
+            let lowercase_type = match metric_type {
+                MetricType::VMHISTOGRAM => "histogram".to_owned(),
+                _ => format!("{:?}", metric_type).to_lowercase(),
+            };
             writer.write_all("# TYPE ")?;
             writer.write_all(name)?;
             writer.write_all(" ")?;
